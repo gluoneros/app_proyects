@@ -1,7 +1,8 @@
 # app_notes
 app para admiistrar proyectos con el modelo kanvan, usando  flask, postgresql y tailwind
 
-'''
+## Estrucura
+```
 canvan_project/
 │
 ├── app/
@@ -19,4 +20,4 @@ canvan_project/
 ├── run.py
 ├── requirements.txt
 
-'''
+```
