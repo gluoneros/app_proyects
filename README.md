@@ -1,5 +1,5 @@
 # app_notes
-app para admiistrar proyectos con flask
+app para admiistrar proyectos con el modelo kanvan, usando  flask, postgresql y tailwind
 
 '''
 canvan_project/
