@@ -1,4 +1,4 @@
-# app_notes
+# app_proyects
 app para admiistrar proyectos con el modelo kanvan, usando  flask, postgresql y tailwind
 
 ## Estrucura
