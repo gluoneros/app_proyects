@@ -1,9 +1,9 @@
 # app_proyects
-app para admiistrar proyectos con el modelo kanvan, usando  flask, postgresql y tailwind
+app para admiistrar proyectos con el modelo canvan, usando  flask, postgresql y tailwind
 
 ## Estrucura
 ```
-canvan_project/
+app_proyects/
 │
 ├── app/
 │   ├── __init__.py
