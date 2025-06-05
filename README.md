@@ -1,5 +1,5 @@
 # app_proyects
-app para admiistrar proyectos con el modelo canvan, usando  flask, postgresql y tailwind
+app para admiistrar proyectos con el modelo canvan, usando  flask, postgresql, sqlalchemy, psycopg2-binary, javascript y tailwind
 
 ## Estrucura
 ```
