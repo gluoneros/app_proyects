@@ -1,34 +1,26 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
-from config import Config
 
-# Inicialización global de extensiones
+
 db = SQLAlchemy()
+
 login_manager = LoginManager()
-login_manager.login_view = 'auth.login'  # Usaremos esto en el siguiente paso
+login_manager.login_view = 'temlates/login'  # nombre de la función, no del archivo
 
 def create_app():
     app = Flask(__name__)
-    app.config.from_object(Config)
+    app.config.from_object('config.Config')
 
-    # Inicializar extensiones
     db.init_app(app)
     login_manager.init_app(app)
 
-    # Importación y registro del blueprint auth (lo crearemos pronto)
-    try:
-        from .auth import auth as auth_blueprintfrom 
-        from . import models
-        app.register_blueprint(auth_blueprint)
-    except ImportError:
-        pass  # Solo si aún no creamos auth.py
+    from app.routes import main as main_blueprint
+    app.register_blueprint(main_blueprint)
 
-    # Ruta base temporal
-    @app.route('/')
-    def index():
-        return "Aplicación funcionando correctamente."
+    @login_manager.user_loader
+    def load_user(user_id):
+        from app.models import User
+        return User.query.get(int(user_id))
 
     return app
-
-from . import models
