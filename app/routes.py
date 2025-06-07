@@ -15,7 +15,24 @@ def login_route():
 
 @main.route('/register', methods=['GET', 'POST'])
 def register_route():
-    # Aquí deberías llamar a tu función de registro real
+    if request.method == 'POST':
+        username = request.form['username']
+        email = request.form['email']
+        password = request.form['password']
+
+        # Verifica si el usuario ya existe
+        if User.query.filter_by(username=username).first():
+            flash('El nombre de usuario ya existe.')
+            return redirect(url_for('main.register_route'))
+
+        # Crea el usuario y guarda en la base de datos
+        user = User(username=username, email=email)
+        user.set_password(password)
+        db.session.add(user)
+        db.session.commit()
+        flash('Usuario registrado correctamente. Ahora puedes iniciar sesión.')
+        return redirect(url_for('main.login_route'))
+
     return render_template('register.html')
 
 @main.route('/logout')
