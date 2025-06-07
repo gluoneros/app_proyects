@@ -18,7 +18,8 @@ def create_app():
 
     # Importación y registro del blueprint auth (lo crearemos pronto)
     try:
-        from .auth import auth as auth_blueprint
+        from .auth import auth as auth_blueprintfrom 
+        from . import models
         app.register_blueprint(auth_blueprint)
     except ImportError:
         pass  # Solo si aún no creamos auth.py
@@ -29,3 +30,5 @@ def create_app():
         return "Aplicación funcionando correctamente."
 
     return app
+
+from . import models
