@@ -152,4 +152,3 @@ Thumbs.db
 # Secrets - BE CAREFUL WITH THESE
 # Ensure any files containing secrets are listed here if they are not already covered by 'instance/' or '.env'
 # e.g., secrets.json, config.ini (if it contains secrets and isn't in 'instance/')
-.env
