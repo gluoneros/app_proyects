@@ -6,7 +6,7 @@ from flask_login import LoginManager
 db = SQLAlchemy()
 
 login_manager = LoginManager()
-login_manager.login_view = 'temlates/login'  # nombre de la función, no del archivo
+login_manager.login_view = 'templates/login'  # nombre de la función, no del archivo
 
 def create_app():
     app = Flask(__name__)

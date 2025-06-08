@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from app.models import User, db
 from flask_login import login_required, current_user
+from . import routes
 
 main = Blueprint('main', __name__)
 
@@ -43,4 +44,4 @@ def logout_route():
 @main.route('/dashboard')
 @login_required
 def dashboard():
-    return f"Bienvenido, {current_user.username}. Estás en el panel de control."
+    return render_template('dashboard.html')
