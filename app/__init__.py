@@ -17,6 +17,9 @@ def create_app():
 
     from app.routes import main as main_blueprint
     app.register_blueprint(main_blueprint)
+    
+    from app.auth import auth as auth_blueprint
+    app.register_blueprint(auth_blueprint)
 
     @login_manager.user_loader
     def load_user(user_id):

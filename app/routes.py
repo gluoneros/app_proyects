@@ -9,10 +9,6 @@ main = Blueprint('main', __name__)
 def index():
     return render_template('index.html')
 
-@main.route('/login', methods=['GET', 'POST'])
-def login_route():
-    # Aquí deberías llamar a tu función de login real
-    return render_template('login.html')
 
 @main.route('/register', methods=['GET', 'POST'])
 def register_route():
@@ -21,7 +17,7 @@ def register_route():
         email = request.form['email']
         password = request.form['password']
 
-        # Verifica si el usuario ya existe
+        # Verifica si el usuario ya existe  
         if User.query.filter_by(username=username).first():
             flash('El nombre de usuario ya existe.')
             return redirect(url_for('main.register_route'))
@@ -44,4 +40,5 @@ def logout_route():
 @main.route('/dashboard')
 @login_required
 def dashboard():
+    flash(f"Bienvenido, {current_user.username}")
     return render_template('dashboard.html')

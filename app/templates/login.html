@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 <h2 class="text-xl font-bold mb-4">Iniciar sesión</h2>
-<form method="POST" class="space-y-4">
+<form action="{{ url_for('auth.login') }}" method="POST">
   <input class="border p-2 w-full" type="text" name="username" placeholder="Usuario" required>
   <input class="border p-2 w-full" type="password" name="password" placeholder="Contraseña" required>
   <button class="bg-blue-500 text-white px-4 py-2" type="submit">Entrar</button>

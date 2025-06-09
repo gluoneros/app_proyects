@@ -10,7 +10,7 @@
 </head>
 <body class="bg-gray-100 text-gray-900 min-h-screen flex items-center justify-center">
     {% if current_user.is_authenticated %}
-        <a href="{{ url_for('dashboard') }}" class="text-white hover:underline">Dashboard</a>
+        <a href="{{ url_for('main.dashboard') }}" class="text-white hover:underline">Dashboard</a>
     {% endif %}
 
     <div class="w-full max-w-md p-6 bg-white rounded shadow-md">
