@@ -1,9 +1,19 @@
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-    <div class="alert alert-info">
-      {% for message in messages %}
-        <p>{{ message }}</p>
-      {% endfor %}
-    </div>
-  {% endif %}
-{% endwith %}
+{% extends "base.html" %}
+{% block content %}
+<div class="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
+
+  <!-- Botón de logout -->
+  <a href="{{ url_for('auth.logout') }}" class="absolute top-4 right-4 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
+    Cerrar sesión
+  </a>
+
+  <div class="relative py-3 sm:max-w-xl sm:mx-auto">
+    {% if current_user.is_authenticated %}
+      <h1 class="text-2xl font-bold text-right">¡Hola, {{ current_user.username }}!</h1>
+      <p class="mt-4 text-gray-700">Bienvenido a tu panel de control.</p>
+    {% else %}
+      <p>No estás autenticado.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

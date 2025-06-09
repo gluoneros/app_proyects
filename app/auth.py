@@ -23,22 +23,28 @@ def login():
 @auth.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        username = request.form['username']
-        email = request.form['email']
-        password = request.form['password']
+        username = request.form.get('username')
+        email = request.form.get('email')
+        password = request.form.get('password')
 
-        existing_user = User.query.filter((User.username == username) | (User.email == email)).first()
+        existing_user = User.query.filter(
+            (User.username == username) | (User.email == email)
+        ).first()
+
         if existing_user:
-            flash('El nombre de usuario o el correo ya están registrados.')
+            flash('El nombre de usuario o correo ya está en uso.')
             return redirect(url_for('auth.register'))
 
+        # Crear nuevo usuario
         user = User(username=username, email=email)
         user.set_password(password)
+
         db.session.add(user)
         db.session.commit()
 
-        flash('Registro exitoso. Inicia sesión.')
-        return redirect(url_for('auth.login'))
+        flash('Registro exitoso. Ahora puedes iniciar sesión.')
+
+        return redirect(url_for('auth.login'))  # ← Esta línea debe terminar con RETURN
 
     return render_template('register.html')
 

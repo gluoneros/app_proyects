@@ -1,12 +1,29 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+
+{% block title %}Regístrate{% endblock %}
+
 {% block content %}
-<h2 class="text-xl font-bold mb-4">Registro</h2>
-<form method="POST" class="space-y-4">
-  <input class="border p-2 w-full" type="text" name="username" placeholder="Usuario" required>
-  <input class="border p-2 w-full" type="email" name="email" placeholder="Correo" required>
-  <input class="border p-2 w-full" type="password" name="password" placeholder="Contraseña" required>
-  <button class="bg-green-500 text-white px-4 py-2" type="submit">Registrarse</button>
+<h2 class="text-xl font-bold mb-4">Crear cuenta</h2>
+
+<!-- Mostrar mensajes flash -->
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    {% for message in messages %}
+      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+<form action="{{ url_for('auth.register') }}" method="POST">
+  <input type="text" name="username" placeholder="Nombre de usuario" required class="border p-2 w-full mb-2">
+  <input type="email" name="email" placeholder="Correo electrónico" required class="border p-2 w-full mb-2">
+  <input type="password" name="password" placeholder="Contraseña" required class="border p-2 w-full mb-2">
+  <button type="submit" class="bg-blue-500 text-white px-4 py-2">Registrarse</button>
 </form>
 
-<a href="{{ url_for('main.login_route') }}">Iniciar sesión</a>
+<p class="mt-4 text-sm">
+  ¿Ya tienes una cuenta? <a href="{{ url_for('auth.login') }}" class="text-blue-500 hover:underline">Inicia sesión aquí</a>
+</p>
 {% endblock %}
