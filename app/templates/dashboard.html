@@ -1,5 +1,8 @@
+<!-- templates/dashboard.html -->
+
 {% extends "base.html" %}
 {% block content %}
+
 <div class="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
 
   <!-- Botón de logout -->
@@ -7,13 +10,39 @@
     Cerrar sesión
   </a>
 
-  <div class="relative py-3 sm:max-w-xl sm:mx-auto">
-    {% if current_user.is_authenticated %}
-      <h1 class="text-2xl font-bold text-right">¡Hola, {{ current_user.username }}!</h1>
-      <p class="mt-4 text-gray-700">Bienvenido a tu panel de control.</p>
+  <div class="relative py-3 sm:max-w-3xl sm:mx-auto bg-white p-6 rounded shadow-md">
+
+    <h1 class="text-2xl font-bold mb-4">¡Hola, {{ current_user.username }}!</h1>
+
+    <!-- Formulario para crear proyecto -->
+    <form action="{{ url_for('main.create_project') }}" method="POST" class="mb-6">
+      <input type="text" name="name" placeholder="Nombre del proyecto" required
+            class="border p-2 w-full mb-2 rounded">
+      <textarea name="description" placeholder="Descripción (opcional)"
+                class="border p-2 w-full mb-2 rounded"></textarea>
+      <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+        Crear Proyecto
+      </button>
+    </form>
+
+    <!-- Lista de proyectos -->
+    {% if projects %}
+      <h2 class="text-xl font-semibold mb-2">Tus Proyectos</h2>
+      <ul class="space-y-2">
+        {% for project in projects %}
+          <li class="bg-gray-100 p-3 rounded">
+            <strong>{{ project.name }}</strong>
+            {% if project.description %}
+              <p class="text-sm text-gray-600">{{ project.description }}</p>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
     {% else %}
-      <p>No estás autenticado.</p>
+      <p>No tienes proyectos aún.</p>
     {% endif %}
+
   </div>
 </div>
+
 {% endblock %}
