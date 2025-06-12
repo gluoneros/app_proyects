@@ -28,21 +28,24 @@
     <!-- Lista de proyectos -->
     {% if projects %}
       <h2 class="text-xl font-semibold mb-2">Tus Proyectos</h2>
-      <ul class="space-y-2">
-        {% for project in projects %}
-          <li class="bg-gray-100 p-3 rounded">
-            <strong>{{ project.name }}</strong>
-            {% if project.description %}
-              <p class="text-sm text-gray-600">{{ project.description }}</p>
-            {% endif %}
-          </li>
-        {% endfor %}
-      </ul>
+  <ul class="space-y-2">
+    {% for project in projects %}
+      <li>
+        <a href="{{ url_for('main.project_board', project_id=project.id) }}"
+          class="block bg-white p-3 rounded shadow hover:bg-gray-50 transition">
+          <strong>{{ project.name }}</strong>
+          {% if project.description %}
+            <p class="text-sm text-gray-600">{{ project.description }}</p>
+          {% endif %}
+        </a>
+    </li>
+    {% endfor %}
+    </ul>
     {% else %}
       <p>No tienes proyectos aún.</p>
     {% endif %}
-
   </div>
 </div>
+
 
 {% endblock %}
