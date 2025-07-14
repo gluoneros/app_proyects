@@ -33,3 +33,33 @@ def create_project():
 def project_board(project_id):
     project = Project.query.filter_by(id=project_id, user_id=current_user.id).first_or_404()
     return render_template('project_board.html', project=project)
+
+# app/routes.py
+
+@main.route('/list/create/<int:project_id>', methods=['POST'])
+@login_required
+def create_list(project_id):
+    title = request.form.get('title')
+    new_list = List(title=title, project_id=project_id)
+    db.session.add(new_list)
+    db.session.commit()
+    flash('Lista creada correctamente.')
+    return redirect(url_for('main.project_board', project_id=project_id))
+
+
+@main.route('/card/create/<int:list_id>', methods=['POST'])
+@login_required
+def create_card(list_id):
+    title = request.form.get('title')
+    description = request.form.get('description')
+    new_card = Card(title=title, description=description, list_id=list_id)
+    db.session.add(new_card)
+    db.session.commit()
+    flash('Tarjeta creada correctamente.')
+    return redirect(url_for('main.project_board', project_id=new_card.list.project_id))
+
+@main.route('/project/<int:project_id>')
+@login_required
+def project_board(project_id):
+    project = Project.query.filter_by(id=project_id, user_id=current_user.id).first_or_404()
+    return render_template('project_board.html', project=project)

@@ -28,6 +28,7 @@ class Project(db.Model): # modelo de proyecto
     
     # Relación con el usuario dueño del proyecto
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    lists = db.relationship('List', backref='project', lazy=True)
 
     def __repr__(self):
         return f'<Project {self.name}>'
@@ -40,6 +41,8 @@ class List(db.Model): # modelo de lista dentro de un proyecto
     title = db.Column(db.String(100), nullable=False)
     project_id = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=False)
     project = db.relationship('Project', backref='lists')
+    
+    cards = db.relationship('Card', backref='list', lazy=True)
 
 class Card(db.Model): # modelo de tarjeta dentro de una lista
     __tablename__ = 'cards'
