@@ -1,8 +1,11 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+from flask_migrate import Migrate
+from flask_login import current_user
 
 db = SQLAlchemy()
+migrate = Migrate()
 
 login_manager = LoginManager()
 login_manager.login_view = 'auth.login'
@@ -12,6 +15,7 @@ def create_app():
     app.config.from_object('config.Config')
 
     db.init_app(app)
+    migrate.init_app(app, db)
     login_manager.init_app(app)
 
     from app.auth import auth as auth_blueprint
@@ -29,4 +33,10 @@ def create_app():
     def load_user(user_id):
         return User.query.get(int(user_id))
 
+    
+    # Hacer current_user disponible en todas las plantillas
+    @app.context_processor
+    def inject_user():
+        return dict(current_user=current_user)
+    
     return app

@@ -1,9 +1,12 @@
+# app/routes.py
+
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
-from app.models import Project
+from app.models import Project, List, Card  # ✅ Aquí está la solución
 from app import db
 
 main = Blueprint('main', __name__)
+
 
 @main.route('/') # Ruta principal
 def index():
@@ -58,8 +61,3 @@ def create_card(list_id):
     flash('Tarjeta creada correctamente.')
     return redirect(url_for('main.project_board', project_id=new_card.list.project_id))
 
-@main.route('/project/<int:project_id>')
-@login_required
-def project_board(project_id):
-    project = Project.query.filter_by(id=project_id, user_id=current_user.id).first_or_404()
-    return render_template('project_board.html', project=project)

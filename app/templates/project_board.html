@@ -1,119 +1,45 @@
-{% extends "base.html" %}
+<!-- templates/project_board.html -->
 
+{% extends "base.html" %}
 {% block title %}Tablero del Proyecto{% endblock %}
 
 {% block content %}
 <div class="min-h-screen bg-gray-100 py-6 px-4 sm:px-6 lg:px-8">
 
-    <div class="max-w-7xl mx-auto">
-        <!-- Título del proyecto -->
-        <h1 class="text-3xl font-bold text-gray-900 mb-6">{{ project.name }}</h1>
-        {% if project.description %}
-            <p class="text-gray-600 mb-8">{{ project.description }}</p>
-        {% endif %}
-        
-        <!-- Tablero Kanban -->
-        <div class="flex space-x-6 overflow-x-auto pb-4">        
-            <!-- Columna: Pendiente -->
-            <div class="bg-gray-200 rounded-lg p-4 min-w-72 flex-shrink-0">
-                <h2 class="text-lg font-semibold mb-3">Pendiente</h2>
-                <div class="space-y-3">
-                    <div class="bg-white p-3 rounded shadow-sm">
-                        <h3 class="font-medium">Tarea 1</h3>
-                        <p class="text-xs text-gray-500">Descripción corta</p>
-                    </div>
-                    <button class="w-full text-center text-sm text-blue-500 hover:text-blue-700">
-                        + Añadir tarjeta
-                    </button>
-                </div>
-                <!-- templates/project_board.html -->
+  <div class="max-w-7xl mx-auto">
+    <!-- Título del proyecto -->
+    <h1 class="text-3xl font-bold text-gray-900 mb-6">{{ project.name }}</h1>
+    {% if project.description %}
+      <p class="text-gray-600 mb-8">{{ project.description }}</p>
+    {% endif %}
 
-                <div class="bg-gray-200 rounded-lg p-4 min-w-72 flex-shrink-0">
-                    <h2 class="text-lg font-semibold mb-3">Pendiente</h2>
-                    <div class="space-y-3">
+    <!-- Tablero Kanban -->
+    <div class="flex space-x-6 overflow-x-auto pb-4">
 
-                        <!-- Tarjetas dinámicas -->
-                        {% for card in list.cards %}
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <h3 class="font-medium">{{ card.title }}</h3>
-                            {% if card.description %}
-                                <p class="text-xs text-gray-500">{{ card.description }}</p>
-                            {% endif %}
-                        </div>
-                        {% endfor %}
-                    </div>
-                    {% endfor %}
+      <!-- Columna: Pendiente -->
+      <!-- templates/project_board.html - parte del tablero -->
 
-                    <!-- Formulario para nueva tarjeta -->
-                    <form action="{{ url_for('main.create_card', list_id=list.id) }}" method="POST" class="mt-2">
-                        <input type="text" name="title" placeholder="Título de la tarjeta" required
-                        class="border p-2 w-full rounded text-sm mb-1">
-                        <textarea name="description" placeholder="Descripción (opcional)"
-                        class="border p-2 w-full rounded text-sm mb-2"></textarea>
-                        <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white text-sm py-1 rounded">
-                            + Añadir tarjeta
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
+<div class="flex space-x-6 overflow-x-auto pb-4">
 
-                <!-- Columna: En progreso -->
-        <div class="bg-gray-200 rounded-lg p-4 min-w-72 flex-shrink-0">
-            <h2 class="text-lg font-semibold mb-3">En progreso</h2>
-            <div class="space-y-3">
-                <div class="bg-white p-3 rounded shadow-sm">
-                    <h3 class="font-medium">Tarea en progreso</h3>
-                    <p class="text-xs text-gray-500">Trabajando en ello</p>
-                </div>
-            </div>
-                <button class="w-full mt-2 text-center text-sm text-blue-500 hover:text-blue-700">
-                    + Añadir tarjeta
-                </button>
-            </div>
-            
-            <!-- Columna: Completado -->
-            <div class="bg-gray-200 rounded-lg p-4 min-w-72 flex-shrink-0">
-                <h2 class="text-lg font-semibold mb-3">Completado</h2>
-                <div class="space-y-3">
-                    <div class="bg-white p-3 rounded shadow-sm">
-                        <h3 class="font-medium">Tarea completada</h3>
-                        <p class="text-xs text-gray-500">✔️ Ya terminada</p>
-                    </div>
-                </div>
-            </div>            
-        </div>
-    </div>
-</div>
-
-<form action="{{ url_for('main.create_list', project_id=project.id) }}" method="POST" class="mt-6">
-    <input type="text" name="title" placeholder="Nombre de la lista" required
-            class="border p-2 w-full rounded mb-2">
-    <button type="submit" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
-        + Añadir Lista
-    </button>
-</form>
-
-<!-- Dentro del div con class="flex space-x-6" -->
-
-{% for list in project.lists %}
+  {% for list in project.lists %}
   <div class="bg-gray-200 rounded-lg p-4 min-w-72 flex-shrink-0">
     <h2 class="text-lg font-semibold mb-3">{{ list.title }}</h2>
+
     <div class="space-y-3">
 
       {% for card in list.cards %}
-        <div class="bg-white p-3 rounded shadow-sm">
-          <h3 class="font-medium">{{ card.title }}</h3>
-          {% if card.description %}
-            <p class="text-xs text-gray-500">{{ card.description }}</p>
-          {% endif %}
-        </div>
+      <div class="bg-white p-3 rounded shadow-sm">
+        <h3 class="font-medium">{{ card.title }}</h3>
+        {% if card.description %}
+          <p class="text-xs text-gray-600 mt-1">{{ card.description }}</p>
+        {% endif %}
+      </div>
       {% endfor %}
 
       <!-- Formulario para nueva tarjeta -->
       <form action="{{ url_for('main.create_card', list_id=list.id) }}" method="POST" class="mt-2">
         <input type="text" name="title" placeholder="Título de la tarjeta" required
-               class="border p-2 w-full rounded text-sm mb-1">
+          class="border p-2 w-full rounded text-sm mb-1">
         <textarea name="description" placeholder="Descripción (opcional)"
                   class="border p-2 w-full rounded text-sm mb-2"></textarea>
         <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white text-sm py-1 rounded">
@@ -123,6 +49,27 @@
 
     </div>
   </div>
-{% endfor %}
+  {% endfor %}
 
+</div>
+
+<!-- Formulario para crear lista -->
+<form action="{{ url_for('main.create_list', project_id=project.id) }}" method="POST" class="mt-6">
+  <input type="text" name="title" placeholder="Nombre de la lista" required
+    class="border p-2 w-full rounded mb-2">
+  <button type="submit" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
+    + Añadir Lista
+  </button>
+</form>
+
+  </div>
+
+</div>
+
+<!-- templates/project_board.html -->
+
+<div class="mb-6 flex items-center justify-between">
+    <h1 class="text-3xl font-bold">{{ project.name }}</h1>
+    <a href="{{ url_for('main.dashboard') }}" class="text-blue-600 hover:text-blue-800 text-sm">&larr; Volver a proyectos</a>
+</div>
 {% endblock %}
