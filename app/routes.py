@@ -2,7 +2,7 @@
 
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
-from app.models import Project, List, Card  # ✅ Aquí está la solución
+from app.models import Project, List, Card, User
 from app import db
 
 main = Blueprint('main', __name__)
@@ -31,10 +31,16 @@ def create_project():
     flash('Proyecto creado correctamente.')
     return redirect(url_for('main.dashboard'))
 
-@main.route('/project/<int:project_id>') # Ruta para ver el tablero de un proyecto
+@main.route('/project/<int:project_id>')
 @login_required
 def project_board(project_id):
-    project = Project.query.filter_by(id=project_id, user_id=current_user.id).first_or_404()
+    project = Project.query.get_or_404(project_id)
+
+    # Verificar que el usuario sea dueño o colaborador
+    if project.user_id != current_user.id and current_user not in project.collaborators:
+        flash("No tienes acceso a este proyecto.")
+        return redirect(url_for('main.dashboard'))
+
     return render_template('project_board.html', project=project)
 
 # app/routes.py
@@ -61,3 +67,31 @@ def create_card(list_id):
     flash('Tarjeta creada correctamente.')
     return redirect(url_for('main.project_board', project_id=new_card.list.project_id))
 
+
+
+@main.route('/project/share/<int:project_id>', methods=['POST'])
+@login_required
+def share_project(project_id):
+    project = Project.query.filter_by(id=project_id).first_or_404()
+
+    # Verificar que el usuario sea dueño del proyecto
+    if project.user_id != current_user.id:
+        flash("No tienes permiso para compartir este proyecto.")
+        return redirect(url_for('main.project_board', project_id=project_id))
+
+    email = request.form.get('email')
+    user_to_add = User.query.filter_by(email=email).first()
+
+    if not user_to_add:
+        flash("No se encontró un usuario con ese correo.")
+        return redirect(url_for('main.project_board', project_id=project_id))
+
+    if user_to_add in project.collaborators:
+        flash("Este usuario ya es colaborador.")
+        return redirect(url_for('main.project_board', project_id=project_id))
+
+    project.collaborators.append(user_to_add)
+    db.session.commit()
+
+    flash(f"Usuario {email} ahora puede colaborar en el proyecto.")
+    return redirect(url_for('main.project_board', project_id=project_id))
