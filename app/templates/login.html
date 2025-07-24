@@ -1,26 +1,29 @@
 {% extends 'base.html' %}
+
+{% block title %}Inicia sesión{% endblock %}
+
 {% block content %}
 <div class="w-full max-w-md p-8 space-y-6 bg-white rounded-2xl shadow-2xl mx-auto mt-10 
         border border-gray-200 center">
-      <div class="text-center">
+    <div class="text-center">
         <h2 class="text-3xl font-extrabold text-indigo-600">Inicia sesión</h2>
         <p class="mt-2 text-sm text-gray-500">Bienvenido de nuevo</p>
-      </div>
-  <div class="bg-white shadow-md p-6 rounded max-w-lg mx-auto">
-      <form class="space-y-5" action="{{ url_for('auth.login') }}" method="POST">
-          <div class="mb-4">
-              <label for="username" class="text-gray-700 font-bold mb-1">Usuario:</label>
-              <input type="text" id="username" name="username" required class="border rounded p-3 w-full max-w-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Usuario">
-          </div>
-          <div class="mb-4">
-              <label for="password" class="text-gray-700 font-bold mb-1">Contraseña:</label>
-              <input type="password" id="password" name="password" required class="border rounded p-3 w-full max-w-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Contraseña">
-          </div>
-          <button type="submit" class="bg-blue-500 text-white px-6 py-3 rounded font-bold hover:bg-blue-700 w-full max-w-lg">Entrar</button>
-      </form>
-      <p class="mt-4 text-sm">
-          ¿No tienes una cuenta? <a href="{{ url_for('auth.register') }}" class="text-blue-500 hover:underline">Regístrate aquí</a>
-      </p>
-  </div>
+    </div>
+    <div class="bg-white shadow-md p-6 rounded max-w-lg mx-auto">
+        <form class="space-y-5" action="{{ url_for('auth.login') }}" method="POST">
+            <div class="mb-4">
+                <label for="username" class="text-gray-700 font-bold mb-1">Usuario:</label>
+                <input type="text" id="username" name="username" required class="border rounded p-3 w-full max-w-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Usuario">
+            </div>
+            <div class="mb-4">
+                <label for="password" class="text-gray-700 font-bold mb-1">Contraseña:</label>
+                <input type="password" id="password" name="password" required class="border rounded p-3 w-full max-w-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Contraseña">
+            </div>
+            <button type="submit" class="bg-blue-500 text-white px-6 py-3 rounded font-bold hover:bg-blue-700 w-full max-w-lg">Entrar</button>
+        </form>
+        <p class="mt-4 text-sm">
+            ¿No tienes una cuenta? <a href="{{ url_for('auth.register') }}" class="text-blue-500 hover:underline">Regístrate aquí</a>
+        </p>
+    </div>
 </div>
 {% endblock %}

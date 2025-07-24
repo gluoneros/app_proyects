@@ -5,13 +5,7 @@
 
 <div class="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
 
-  <!-- Botón de logout -->
-  <a href="{{ url_for('auth.logout') }}" class="absolute top-4 right-4 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
-    Cerrar sesión
-  </a>
-
   <div class="relative py-3 sm:max-w-3xl sm:mx-auto bg-white p-6 rounded shadow-md">
-
     <h1 class="text-2xl font-bold mb-4">¡Hola, {{ current_user.username }}!</h1>
 
     <!-- Formulario para crear proyecto -->
@@ -26,43 +20,42 @@
     </form>
 
     <!-- Lista de proyectos -->
-    <!-- templates/dashboard.html -->
-
-<div class="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-6xl mx-auto">
+    <div class="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+      <div class="max-w-6xl mx-auto">
         <h1 class="text-3xl font-bold text-gray-900 mb-8">Mis Proyectos</h1>
 
         {% if projects %}
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {% for project in projects %}
-                    <a href="{{ url_for('main.project_board', project_id=project.id) }}"
-                      class="bg-white rounded-lg shadow hover:shadow-lg transition p-6 block border-l-4 border-blue-500">
-                        <h2 class="text-xl font-semibold text-gray-800">{{ project.name }}</h2>
-                        {% if project.description %}
-                            <p class="text-gray-600 text-sm mt-2">{{ project.description }}</p>
-                        {% endif %}
-                        <div class="mt-4 flex justify-between items-center text-xs text-gray-500">
-                            <span>Dueño: {{ current_user.username }}</span>
-                            <span>📝 {{ project.lists | length }} listas</span>
-                        </div>
-                    </a>
-                {% endfor %}
-            </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for project in projects %}
+              <a href="{{ url_for('main.project_board', project_id=project.id) }}"
+              class="bg-white rounded-lg shadow hover:shadow-lg transition p-6 block border-l-4 border-blue-500">
+                <h2 class="text-xl font-semibold text-gray-800">{{ project.name }}</h2>
+                {% if project.description %}
+                  <p class="text-gray-600 text-sm mt-2">{{ project.description }}</p>
+                {% endif %}
+                  <div class="mt-4 flex justify-between items-center text-xs text-gray-500">
+                    <span>Dueño: {{ current_user.username }}</span>
+                    <span>📝 {{ project.lists | length }} listas</span>
+                  </div>
+              </a>
+            {% endfor %}
+          </div>
         {% else %}
-            <div class="bg-white p-8 rounded-lg shadow text-center">
-                <p class="text-gray-500">Aún no tienes proyectos. ¡Crea uno nuevo!</p>
-            </div>
+          <div class="bg-white p-8 rounded-lg shadow text-center">
+            <p class="text-gray-500">Aún no tienes proyectos. ¡Crea uno nuevo!</p>
+          </div>
         {% endif %}
 
-        <!-- Botón flotante para crear proyecto -->
-        <a href="#" 
-          class="fixed bottom-8 right-8 bg-blue-600 hover:bg-blue-700 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition text-2xl font-bold">
-            +
-        </a>
+        <!-- Botón debajo del contenido -->
+        <div class="flex justify-end mt-8">
+          <a href="{{ url_for('main.create_project') }}"
+            class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded flex items-center justify-center shadow-lg hover:shadow-xl transition">
+              + Crear tablero
+          </a>
+        </div>
+
+      </div>
     </div>
-</div>
   </div>
 </div>
-
-
 {% endblock %}

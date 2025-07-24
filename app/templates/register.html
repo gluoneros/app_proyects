@@ -3,27 +3,45 @@
 {% block title %}Regístrate{% endblock %}
 
 {% block content %}
-<h2 class="text-xl font-bold mb-4">Crear cuenta</h2>
+<div class="w-full max-w-md p-8 space-y-6 bg-white rounded-2xl shadow-2xl mx-auto mt-10 
+        border border-gray-200 center">
+  <div class="text-center">
+    <h2 class="text-3xl font-extrabold text-indigo-600">Regístrate</h2>
+    <p class="mt-2 text-sm text-gray-500">Crea una nueva cuenta</p>
+  </div>
 
-<!-- Mostrar mensajes flash -->
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-    {% for message in messages %}
-      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4">
-        {{ message }}
+  <!-- Mostrar mensajes flash -->
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      {% for message in messages %}
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <div class="bg-white shadow-md p-6 rounded max-w-lg mx-auto">
+    <form class="space-y-5" action="{{ url_for('auth.register') }}" method="POST">
+      <div class="mb-4">
+        <label for="username" class="text-gray-700 font-bold mb-1">Usuario:</label>
+        <input type="text" name="username" placeholder="Nombre de usuario" required class="border p-2 w-full mb-2">
       </div>
-    {% endfor %}
-  {% endif %}
-{% endwith %}
+      <div class="mb-4">
+        <label for="email" class="text-gray-700 font-bold mb-1">Correo electrónico:</label>
+        <input type="email" name="email" placeholder="Correo electrónico" required class="border p-2 w-full mb-2">
+      </div>
+      <div class="mb-4">
+        <label for="password" class="text-gray-700 font-bold mb-1">Contraseña:</label>
+        <input type="password" name="password" placeholder="Contraseña" required class="border p-2 w-full mb-2">
+      </div>
+      <button type="submit" class="bg-blue-500 text-white px-4 py-2">Registrarse</button>
+    </form>
+  </div>
 
-<form action="{{ url_for('auth.register') }}" method="POST">
-  <input type="text" name="username" placeholder="Nombre de usuario" required class="border p-2 w-full mb-2">
-  <input type="email" name="email" placeholder="Correo electrónico" required class="border p-2 w-full mb-2">
-  <input type="password" name="password" placeholder="Contraseña" required class="border p-2 w-full mb-2">
-  <button type="submit" class="bg-blue-500 text-white px-4 py-2">Registrarse</button>
-</form>
+  <p class="mt-4 text-sm">
+    ¿Ya tienes una cuenta? <a href="{{ url_for('auth.login') }}" class="text-blue-500 hover:underline">Inicia sesión aquí</a>
+  </p>
+</div>
 
-<p class="mt-4 text-sm">
-  ¿Ya tienes una cuenta? <a href="{{ url_for('auth.login') }}" class="text-blue-500 hover:underline">Inicia sesión aquí</a>
-</p>
 {% endblock %}
