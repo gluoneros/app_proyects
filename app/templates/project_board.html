@@ -1,8 +1,6 @@
 <!-- templates/project_board.html -->
-
 {% extends "base.html" %}
 {% block title %}{{ project.name }} - Tablero{% endblock %}
-
 {% block content %}
 <div class="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 py-8 px-4 sm:px-6 lg:px-8">
     <div class="max-w-7xl mx-auto">
@@ -11,14 +9,12 @@
         <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 p-6 mb-8">
             <div class="flex items-center justify-between mb-4">
                 <a href="{{ url_for('main.dashboard') }}" 
-                    class="inline-flex items-center text-indigo-600 hover:text-indigo-800 text-sm font-medium bg-indigo-50 hover:bg-indigo-100 px-4 py-2 rounded-full transition-all duration-200">
+                class="inline-flex items-center text-indigo-600 hover:text-indigo-800 text-sm font-medium bg-indigo-50 hover:bg-indigo-100 px-4 py-2 rounded-full transition-all duration-200">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                     </svg>
                     Volver a proyectos
                 </a>
-                
-                <!-- Project Actions -->
                 <div class="flex items-center space-x-3">
                     <button class="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-full transition-all">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -32,7 +28,6 @@
                     </button>
                 </div>
             </div>
-            
             <div class="mb-6">
                 <h1 class="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-2">
                     {{ project.name }}
@@ -76,124 +71,117 @@
         </div>
 
         <!-- Tablero Kanban -->
-        <div class="flex space-x-6 overflow-x-auto pb-8" style="scrollbar-width: thin;">
+        <!-- Dentro del contenedor principal -->
+        <div class="flex space-x-6 overflow-x-auto pb-8">
+
+            <!-- Listas existentes -->
             {% for list in project.lists %}
-            <div class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 p-5 min-w-80 flex-shrink-0 hover:shadow-xl transition-all duration-300" 
-                style="min-height: 500px;">
-                
-                <!-- Header de la lista -->
-                <div class="flex items-center justify-between mb-4 pb-3 border-b border-gray-100">
-                    <h2 class="text-lg font-bold text-gray-800 flex items-center">
-                        <div class="w-3 h-3 bg-gradient-to-r from-indigo-400 to-purple-400 rounded-full mr-3"></div>
-                        {{ list.title }}
-                    </h2>
-                    <span class="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-full font-medium">
-                        {{ list.cards|length }}
-                    </span>
-                </div>
-                
-                <div class="space-y-3 mb-4" style="max-height: 400px; overflow-y: auto;">
-                    {% for card in list.cards %}
-                    <div class="group bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-4 border border-gray-100 hover:border-indigo-200 cursor-pointer">
-                        <div class="flex items-start justify-between mb-2">
-                            <h3 class="font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors flex-1">
-                                {{ card.title }}
-                            </h3>
-                            <button class="opacity-0 group-hover:opacity-100 p-1 text-gray-400 hover:text-gray-600 transition-all rounded">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
-                                </svg>
-                            </button>
-                        </div>
-                        {% if card.description %}
-                            <p class="text-gray-600 text-sm leading-relaxed line-clamp-3 mb-3">{{ card.description }}</p>
-                        {% endif %}
+                <div class="bg-gray-100 rounded-lg p-4 min-w-80 flex-shrink-0">
+                    <h2 class="text-lg font-semibold mb-4 text-gray-800">{{ list.title }}</h2>
+
+                    <!-- ✅ Zona de soltar: este div es el contenedor de tarjetas -->
+                    <div class="space-y-3"
+                        ondragover="event.preventDefault()"
+                        ondrop="drop(event)"
+                        data-list-id="{{ list.id }}">
                         
-                        <!-- Card footer con etiquetas -->
-                        <div class="flex items-center justify-between text-xs text-gray-500">
-                            <div class="flex space-x-2">
-                                <span class="flex items-center">
-                                    <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                    </svg>
-                                    Hoy
-                                </span>
+                        <!-- Tarjetas -->
+                        {% for card in list.cards %}
+                            <div class="bg-white p-4 rounded shadow-sm hover:shadow transition"
+                                draggable="true"
+                                ondragstart="dragStart(event)"
+                                data-card-id="{{ card.id }}">
+                                <h3 class="font-medium text-gray-900">{{ card.title }}</h3>
+                                {% if card.description %}
+                                    <p class="text-gray-600 text-sm mt-1">{{ card.description }}</p>
+                                {% endif %}
                             </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
+                        {% endfor %}
 
-                <!-- Formulario para nueva tarjeta -->
-                <form action="{{ url_for('main.create_card', list_id=list.id) }}" method="POST" class="space-y-3">
-                    <input type="text" name="title" placeholder="Añadir una tarjeta..." required
-                        class="w-full p-3 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all placeholder-gray-400">
-                    <textarea name="description" placeholder="Descripción (opcional)" rows="2"
-                        class="w-full p-3 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all placeholder-gray-400 resize-none"></textarea>
+                        <!-- Formulario para nueva tarjeta -->
+                        <form action="{{ url_for('main.create_card', list_id=list.id) }}" method="POST" class="mt-4">
+                            <input type="text" name="title" placeholder="Título de la tarjeta" required
+                                class="border p-2 w-full rounded text-sm mb-2">
+                            <textarea name="description" placeholder="Descripción (opcional)"
+                                class="border p-2 w-full rounded text-sm mb-2"></textarea>
+                            <button type="submit" 
+                                    class="w-full bg-blue-500 hover:bg-blue-600 text-white text-sm py-2 rounded font-medium transition">
+                                + Añadir tarjeta
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            {% endfor %}  <!-- ✅ Cierre correcto del bucle -->
+
+            <!-- Formulario para crear nueva lista -->
+            <div class="bg-white/70 backdrop-blur-sm rounded-2xl border-2 border-dashed border-gray-300 p-5 min-w-80 flex-shrink-0">
+                <form action="{{ url_for('main.create_list', project_id=project.id) }}" method="POST">
+                    <input type="text" name="title" placeholder="Nombre de la lista" required
+                        class="w-full p-3 border border-gray-300 rounded-xl text-sm mb-2">
                     <button type="submit" 
-                        class="w-full bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white text-sm py-3 rounded-xl font-medium transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
-                        <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                        </svg>
-                        Añadir tarjeta
+                            class="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-xl">
+                        + Añadir Lista
                     </button>
                 </form>
             </div>
-            {% endfor %}
 
-            <!-- Formulario para nueva lista -->
-            <div class="bg-white/70 backdrop-blur-sm rounded-2xl border-2 border-dashed border-gray-300 hover:border-indigo-400 p-5 min-w-80 flex-shrink-0 transition-all duration-300 hover:bg-white/90" 
-                style="min-height: 500px;">
-                <form action="{{ url_for('main.create_list', project_id=project.id) }}" method="POST" class="h-full flex flex-col justify-center items-center space-y-4">
-                    <div class="text-center mb-6">
-                        <div class="w-16 h-16 bg-gradient-to-r from-indigo-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <svg class="w-8 h-8 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                            </svg>
-                        </div>
-                        <h3 class="text-lg font-semibold text-gray-700 mb-2">Añadir otra lista</h3>
-                        <p class="text-sm text-gray-500">Organiza tus tareas en una nueva columna</p>
-                    </div>
-                    
-                    <input type="text" name="title" placeholder="Ingresa el título de la lista..." required
-                        class="w-full p-3 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all">
-                    <button type="submit" 
-                        class="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
-                        <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                        </svg>
-                        Crear Lista
-                    </button>
-                </form>
-            </div>
         </div>
 
-        <!-- Formulario para invitar colaboradores -->
-        <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 p-6 mt-8">
-            <form action="{{ url_for('main.share_project', project_id=project.id) }}" method="POST">
-                <div class="flex items-center mb-4">
-                    <svg class="w-6 h-6 text-indigo-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
-                    </svg>
-                    <h3 class="text-xl font-bold text-gray-800">Invitar colaborador</h3>
-                </div>
-                <p class="text-gray-600 mb-4">Comparte este proyecto con otros miembros de tu equipo</p>
-                <div class="flex space-x-3">
-                    <div class="flex-grow">
-                        <input type="email" name="email" placeholder="nombre@ejemplo.com" required
-                            class="w-full p-4 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all">
-                    </div>
-                    <button type="submit" 
-                        class="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold py-4 px-8 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 whitespace-nowrap">
-                        <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
-                        </svg>
-                        Enviar invitación
-                    </button>
-                </div>
-            </form>
-        </div>
     </div>
 </div>
+
+<!-- JavaScript para drag & drop -->
+<script>
+    let draggedCardId = null;
+
+    function dragStart(event) {
+        draggedCardId = event.target.dataset.cardId;
+        event.dataTransfer.setData('text/plain', draggedCardId);
+        event.target.classList.add('opacity-50');
+    }
+
+    function dragOver(event) {
+        event.preventDefault();
+        event.currentTarget.classList.add('bg-gray-200', 'rounded');
+    }
+
+    function drop(event) {
+    event.preventDefault();
+
+    // Asegurarnos de que el contenedor es el correcto (puede ser un hijo)
+    let targetList = event.currentTarget;
+    if (!targetList.hasAttribute('data-list-id')) {
+        targetList = targetList.closest('[data-list-id]');
+    }
+
+    const listId = targetList.dataset.listId;
+
+    if (draggedCardId && listId) {
+        fetch(`/card/move/${draggedCardId}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ list_id: listId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const card = document.querySelector(`[data-card-id="${draggedCardId}"]`);
+                if (card && targetList) {
+                    targetList.appendChild(card);  // ✅ Ahora targetList existe
+                    draggedCardId = null;
+                } else {
+                    console.error("No se encontró la tarjeta o la lista destino");
+                }
+            } else {
+                alert('Error al mover la tarjeta: ' + (data.error || 'Desconocido'));
+            }
+        })
+        .catch(err => {
+            console.error('Error en fetch:', err);
+            alert('No se pudo mover la tarjeta');
+        });
+    }
+}
+</script>
 
 {% endblock %}

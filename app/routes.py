@@ -95,3 +95,33 @@ def share_project(project_id):
 
     flash(f"Usuario {email} ahora puede colaborar en el proyecto.")
     return redirect(url_for('main.project_board', project_id=project_id))
+
+@main.route('/card/move/<int:card_id>', methods=['POST'])
+@login_required
+def move_card(card_id):
+    try:
+        data = request.get_json()
+        if not data:
+            return {'success': False, 'error': 'No se recibió JSON'}, 400
+
+        new_list_id = data.get('list_id')
+        if not new_list_id:
+            return {'success': False, 'error': 'Falta list_id'}, 400
+
+        card = Card.query.get_or_404(card_id)
+        list_destino = List.query.get_or_404(new_list_id)
+
+        # Verificar acceso al proyecto
+        project = list_destino.project
+        if project.user_id != current_user.id and current_user not in project.collaborators:
+            return {'success': False, 'error': 'Permiso denegado'}, 403
+
+        # Mover la tarjeta
+        card.list_id = new_list_id
+        db.session.commit()
+
+        return {'success': True}, 200
+
+    except Exception as e:
+        db.session.rollback()
+        return {'success': False, 'error': str(e)}, 500
