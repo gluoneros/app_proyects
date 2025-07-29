@@ -35,5 +35,54 @@
     {% block content %}{% endblock %}
 </div>
 
+<script>
+    function toggleNewCardForm(listId) {
+        const form = document.getElementById(`form-new-card-${listId}`);
+        if (form.classList.contains('hidden')) {
+            form.classList.remove('hidden');
+        } else {
+            form.classList.add('hidden');
+        }
+    }
+
+    function drop(event) {
+        event.preventDefault();
+
+        // Aseguramos que el contenedor tenga el data-list-id
+        let targetList = event.currentTarget;
+        if (!targetList.hasAttribute('data-list-id')) {
+            targetList = targetList.closest('[data-list-id]');
+        }
+
+        const listId = targetList.dataset.listId;
+
+        if (draggedCardId && listId) {
+            fetch(`/card/move/${draggedCardId}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ list_id: listId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const card = document.querySelector(`[data-card-id="${draggedCardId}"]`);
+                    const cardContainer = document.getElementById(`list-cards-${listId}`);
+                    
+                    if (card && cardContainer) {
+                        cardContainer.appendChild(card);  // Ahora se agrega al contenedor correcto
+                        draggedCardId = null;
+                    }
+                } else {
+                    alert('Error al mover la tarjeta: ' + (data.error || 'Desconocido'));
+                }
+            })
+                .catch(err => {
+                console.error('Error:', err);
+                alert('No se pudo mover la tarjeta');
+            });
+        }
+    }
+</script>
+
 </body>
 </html>

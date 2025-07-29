@@ -79,18 +79,19 @@
                 <div class="bg-gray-100 rounded-lg p-4 min-w-80 flex-shrink-0">
                     <h2 class="text-lg font-semibold mb-4 text-gray-800">{{ list.title }}</h2>
 
-                    <!-- ✅ Zona de soltar: este div es el contenedor de tarjetas -->
+                    <!-- Zona de tarjetas -->
                     <div class="space-y-3"
-                        ondragover="event.preventDefault()"
-                        ondrop="drop(event)"
-                        data-list-id="{{ list.id }}">
-                        
-                        <!-- Tarjetas -->
+                    ondragover="event.preventDefault()"
+                    ondrop="drop(event)"
+                    data-list-id="{{ list.id }}"
+                    id="list-cards-{{ list.id }}">
+    
+                        <!-- Tarjetas existentes -->
                         {% for card in list.cards %}
                             <div class="bg-white p-4 rounded shadow-sm hover:shadow transition"
-                                draggable="true"
-                                ondragstart="dragStart(event)"
-                                data-card-id="{{ card.id }}">
+                            draggable="true"
+                            ondragstart="dragStart(event)"
+                            data-card-id="{{ card.id }}">
                                 <h3 class="font-medium text-gray-900">{{ card.title }}</h3>
                                 {% if card.description %}
                                     <p class="text-gray-600 text-sm mt-1">{{ card.description }}</p>
@@ -98,16 +99,32 @@
                             </div>
                         {% endfor %}
 
-                        <!-- Formulario para nueva tarjeta -->
-                        <form action="{{ url_for('main.create_card', list_id=list.id) }}" method="POST" class="mt-4">
+                    </div>
+
+                    <!-- Botón para mostrar formulario -->
+                    <button type="button"
+                    class="mt-2 text-sm text-blue-500 hover:text-blue-700 font-medium w-full text-left"
+                    onclick="toggleNewCardForm({{ list.id }})">
+                        + Añadir tarjeta
+                    </button>
+
+                    <!-- Formulario oculto para nueva tarjeta -->
+                    <!-- Formulario oculto para nueva tarjeta -->
+                    <div id="form-new-card-{{ list.id }}" class="hidden mt-2 opacity-0 max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                        <form action="{{ url_for('main.create_card', list_id=list.id) }}" method="POST" class="space-y-2 bg-white p-3 rounded shadow-sm">
                             <input type="text" name="title" placeholder="Título de la tarjeta" required
-                                class="border p-2 w-full rounded text-sm mb-2">
+                            class="border p-2 w-full rounded text-sm">
                             <textarea name="description" placeholder="Descripción (opcional)"
-                                class="border p-2 w-full rounded text-sm mb-2"></textarea>
-                            <button type="submit" 
-                                    class="w-full bg-blue-500 hover:bg-blue-600 text-white text-sm py-2 rounded font-medium transition">
-                                + Añadir tarjeta
-                            </button>
+                            class="border p-2 w-full rounded text-sm"></textarea>
+                            <div class="flex space-x-2">
+                                <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white text-sm py-1 px-3 rounded">
+                                    Añadir
+                                </button>
+                                <button type="button" class="bg-gray-300 hover:bg-gray-400 text-gray-700 text-sm py-1 px-3 rounded"
+                                onclick="toggleNewCardForm({{ list.id }})">
+                                    Cancelar
+                                </button>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -124,9 +141,7 @@
                     </button>
                 </form>
             </div>
-
         </div>
-
     </div>
 </div>
 
