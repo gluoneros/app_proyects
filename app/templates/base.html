@@ -35,54 +35,36 @@
     {% block content %}{% endblock %}
 </div>
 
+<!-- base.html - dentro del <body> o al final -->
 <script>
-    function toggleNewCardForm(listId) {
+    function toggleNewCardForm(button, listId) {
         const form = document.getElementById(`form-new-card-${listId}`);
+        const plus = button.querySelector('span');
+
+        if (!form) return;
+
         if (form.classList.contains('hidden')) {
+            // Mostrar formulario
             form.classList.remove('hidden');
+            // Forzar reflow para que la transición funcione
+            form.offsetHeight;
+            form.classList.remove('opacity-0', 'max-h-0');
+            form.classList.add('opacity-100', 'max-h-96');
+            if (plus) plus.classList.add('rotate-45');
         } else {
-            form.classList.add('hidden');
-        }
-    }
+            // Ocultar formulario
+            form.classList.remove('opacity-100', 'max-h-96');
+            form.classList.add('opacity-0', 'max-h-0');
+            if (plus) plus.classList.remove('rotate-45');
 
-    function drop(event) {
-        event.preventDefault();
-
-        // Aseguramos que el contenedor tenga el data-list-id
-        let targetList = event.currentTarget;
-        if (!targetList.hasAttribute('data-list-id')) {
-            targetList = targetList.closest('[data-list-id]');
-        }
-
-        const listId = targetList.dataset.listId;
-
-        if (draggedCardId && listId) {
-            fetch(`/card/move/${draggedCardId}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ list_id: listId })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    const card = document.querySelector(`[data-card-id="${draggedCardId}"]`);
-                    const cardContainer = document.getElementById(`list-cards-${listId}`);
-                    
-                    if (card && cardContainer) {
-                        cardContainer.appendChild(card);  // Ahora se agrega al contenedor correcto
-                        draggedCardId = null;
-                    }
-                } else {
-                    alert('Error al mover la tarjeta: ' + (data.error || 'Desconocido'));
+            // Esperar a que termine la animación antes de ocultar
+            setTimeout(() => {
+                if (form.classList.contains('opacity-0')) {
+                    form.classList.add('hidden');
                 }
-            })
-                .catch(err => {
-                console.error('Error:', err);
-                alert('No se pudo mover la tarjeta');
-            });
+            }, 300);
         }
     }
 </script>
-
 </body>
 </html>

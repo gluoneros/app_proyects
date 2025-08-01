@@ -198,28 +198,7 @@
         }
     }
 
-    function toggleNewCardForm(button, listId) {
-        const form = document.getElementById(`form-new-card-${listId}`);
-        const plus = button.querySelector('span');
-
-        if (form.classList.contains('hidden')) {
-            form.classList.remove('hidden');
-            form.offsetHeight;
-            form.classList.remove('opacity-0', 'max-h-0');
-            form.classList.add('opacity-100', 'max-h-96');
-            plus.classList.add('rotate-45');
-        } else {
-            form.classList.remove('opacity-100', 'max-h-96');
-            form.classList.add('opacity-0', 'max-h-0');
-            plus.classList.remove('rotate-45');
-            
-            setTimeout(() => {
-                if (form.classList.contains('opacity-0')) {
-                    form.classList.add('hidden');
-                }
-            }, 300);
-        }
-    }
+ 
 </script>
 
 {% endblock %}
