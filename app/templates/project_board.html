@@ -103,12 +103,12 @@
 
                     <!-- Botón para mostrar formulario -->
                     <button type="button"
-                    class="mt-2 text-sm text-blue-500 hover:text-blue-700 font-medium w-full text-left"
-                    onclick="toggleNewCardForm({{ list.id }})">
-                        + Añadir tarjeta
+                            class="mt-2 text-sm text-blue-500 hover:text-blue-700 font-medium w-full text-left flex items-center transition-colors duration-200"
+                            onclick="toggleNewCardForm(this, {{ list.id }})">
+                        <span class="mr-1 transform transition-transform duration-200">+</span>
+                        Añadir tarjeta
                     </button>
-
-                    <!-- Formulario oculto para nueva tarjeta -->
+                    
                     <!-- Formulario oculto para nueva tarjeta -->
                     <div id="form-new-card-{{ list.id }}" class="hidden mt-2 opacity-0 max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
                         <form action="{{ url_for('main.create_card', list_id=list.id) }}" method="POST" class="space-y-2 bg-white p-3 rounded shadow-sm">
@@ -128,7 +128,7 @@
                         </form>
                     </div>
                 </div>
-            {% endfor %}  <!-- ✅ Cierre correcto del bucle -->
+            {% endfor %}
 
             <!-- Formulario para crear nueva lista -->
             <div class="bg-white/70 backdrop-blur-sm rounded-2xl border-2 border-dashed border-gray-300 p-5 min-w-80 flex-shrink-0">
@@ -161,42 +161,65 @@
     }
 
     function drop(event) {
-    event.preventDefault();
+        event.preventDefault();
 
-    // Asegurarnos de que el contenedor es el correcto (puede ser un hijo)
-    let targetList = event.currentTarget;
-    if (!targetList.hasAttribute('data-list-id')) {
-        targetList = targetList.closest('[data-list-id]');
-    }
+        // Asegurarnos de que el contenedor es el correcto (puede ser un hijo)
+        let targetList = event.currentTarget;
+        if (!targetList.hasAttribute('data-list-id')) {
+            targetList = targetList.closest('[data-list-id]');
+        }
 
-    const listId = targetList.dataset.listId;
+        const listId = targetList.dataset.listId;
 
-    if (draggedCardId && listId) {
-        fetch(`/card/move/${draggedCardId}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ list_id: listId })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                const card = document.querySelector(`[data-card-id="${draggedCardId}"]`);
-                if (card && targetList) {
-                    targetList.appendChild(card);  // ✅ Ahora targetList existe
-                    draggedCardId = null;
+        if (draggedCardId && listId) {
+            fetch(`/card/move/${draggedCardId}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ list_id: listId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const card = document.querySelector(`[data-card-id="${draggedCardId}"]`);
+                    if (card && targetList) {
+                        targetList.appendChild(card);  // ✅ Ahora targetList existe
+                        draggedCardId = null;
+                    } else {
+                        console.error("No se encontró la tarjeta o la lista destino");
+                    }
                 } else {
-                    console.error("No se encontró la tarjeta o la lista destino");
+                    alert('Error al mover la tarjeta: ' + (data.error || 'Desconocido'));
                 }
-            } else {
-                alert('Error al mover la tarjeta: ' + (data.error || 'Desconocido'));
-            }
-        })
-        .catch(err => {
-            console.error('Error en fetch:', err);
-            alert('No se pudo mover la tarjeta');
-        });
+            })
+            .catch(err => {
+                console.error('Error en fetch:', err);
+                alert('No se pudo mover la tarjeta');
+            });
+        }
     }
-}
+
+    function toggleNewCardForm(button, listId) {
+        const form = document.getElementById(`form-new-card-${listId}`);
+        const plus = button.querySelector('span');
+
+        if (form.classList.contains('hidden')) {
+            form.classList.remove('hidden');
+            form.offsetHeight;
+            form.classList.remove('opacity-0', 'max-h-0');
+            form.classList.add('opacity-100', 'max-h-96');
+            plus.classList.add('rotate-45');
+        } else {
+            form.classList.remove('opacity-100', 'max-h-96');
+            form.classList.add('opacity-0', 'max-h-0');
+            plus.classList.remove('rotate-45');
+            
+            setTimeout(() => {
+                if (form.classList.contains('opacity-0')) {
+                    form.classList.add('hidden');
+                }
+            }, 300);
+        }
+    }
 </script>
 
 {% endblock %}
